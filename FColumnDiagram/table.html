@@ -1,0 +1,42 @@
+<!DOCTYPE>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>表格</title>
+
+		<link href="ftools.css" rel="stylesheet"></link>
+		<script src="jquery.min.js"></script>
+		<script src="ftools.js"></script>
+	</head>
+	<body>
+		<div id="column_table" style="height:800px;width:100%;">
+		
+		<div>
+		<script>
+			var s = $("#column_table").initColumnDiagram({
+				//x轴和y轴的名称
+				name:{
+					x:"量程",
+					y:"量程次数"
+				},
+				scale:4,
+				min:1,
+				max:300,
+				select_min:1,
+				select_max:11,
+				//数据，包括table
+				data:[]
+			});
+			s.add({
+				title:"标题1",
+				x:{data:[1, 2, 3, 4, 5, 79]},
+				y:{data:[3, 4, 5, 6, 7, 10]}
+			});
+			$("#column_table").getColumnDiagram().add({
+				title:"标题2",
+				x:{data:[1, 2, 3, 4.5, 6]},
+				y:{data:[2, 11, 2, 4, 1]}
+			});
+		</script>
+	</body>
+</html>
