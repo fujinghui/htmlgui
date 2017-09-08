@@ -44,10 +44,10 @@ function FColumnDiagram(){
 		{
 			scale = obj.scale;
 		}
+		//min_value = min_value;
+		//max_value = max_value;
 
-		min_value = min_value;
-		max_value = max_value;
-		step = scale;
+		step = (max_value-min_value+1);
 		//是否叠加
 		if(obj.overlay)
 			overlay = obj.overlay;
@@ -61,34 +61,39 @@ function FColumnDiagram(){
 	}
 	function createButton(obj){
 		div_button = document.createElement("div");
+		var span = document.createElement("span");
+		span.innerHTML = "图示比例：";
+		$(div_button).append(span);
 		for(var i = 0; i < 4; i ++)
 		{
-			button[i] = document.createElement("button");
+			button[i] = document.createElement("span");
 			button[i].addEventListener("click", button_click);
+			button[i].setAttribute("style", "margin:10px;");
 			
 			$(div_button).append(button[i]);
 		}
-		button[0].innerHTML = "1"; button[0].id = "1";
-		button[1].innerHTML = "2"; button[1].id = "2";
-		button[2].innerHTML = "5"; button[2].id = "5";
-		button[3].innerHTML = "10"; button[3].id = "10";
+		button[0].innerHTML = "1km"; button[0].id = "1";
+		button[1].innerHTML = "2km"; button[1].id = "2";
+		button[2].innerHTML = "5km"; button[2].id = "5";
+		button[3].innerHTML = "10km"; button[3].id = "10";
 		return div_button;
 	}
-	function createRnage(obj){
+	function createRange(obj){
 		range = document.createElement("input");
 		range.type = "range";
-		range.value = min_value;
+		//console.log(min_value);
 		range.max = best_max_value;
 		range.min = best_min_value;
+		range.step = step;//max_value-min_value+1;
 		range.onchange = range_change;
-		range.step = max_value-min_value+1;
-		
+		//console.log(best_max_value+" "+best_min_value);
+		range.value = min_value;
 		$(range).css("width", width+"px");
 		return range;
 	}
 	function createSpan(obj){
 		span = document.createElement("span");
-		span.innerHTML = range.value+"";
+		span.innerHTML = min_value+"";
 		return span;
 	}
 	this.add = function(d){
@@ -112,7 +117,7 @@ function FColumnDiagram(){
 		canvas.width = width;
 		width -= move_x;
 		canvas.height = height+white_height;
-		document.addEventListener("mousewheel", mousewheel);;
+		window.addEventListener("mousewheel", mousewheel);;
 		//获取context
 		context = canvas.getContext("2d");
 		
@@ -131,7 +136,7 @@ function FColumnDiagram(){
 		$(obj.div_obj).append("<br />");
 		$(obj.div_obj).append(canvas);
 		$(obj.div_obj).append("<br />");
-		$(obj.div_obj).append(createRnage(obj));
+		$(obj.div_obj).append(createRange(obj));
 		$(obj.div_obj).append("<br />");
 		$(obj.div_obj).append(createSpan(obj));
 
@@ -143,8 +148,8 @@ function FColumnDiagram(){
 		//console.log(range.value);
 		min_value = parseInt(range.value)
 		max_value = parseInt(range.value) + parseInt(range.step)-1;
-		console.log(min_value);
-		console.log(max_value);
+		//console.log(min_value);
+		//console.log(max_value);
 		if(max_value >= best_max_value)
 		{
 			max_value = best_max_value;
@@ -231,8 +236,8 @@ function FColumnDiagram(){
 			//计算每一个柱形图的最大值和最小值
 			for(var u = 0; u < data.length; u ++)
 			{
-				data[u].x.max = -9999999; data[u].x.min = 9999999;
-				data[u].y.max = -9999999; data[u].y.min = 9999999;
+				data[u].x.max = -0; data[u].x.min = 9999999;
+				data[u].y.max = -0; data[u].y.min = 9999999;
 				data[u].x.show_count = 0; data[u].y.show_count = 0;
 
 				for(var i = 0; i < data[u].x.data.length; i ++)
@@ -261,10 +266,13 @@ function FColumnDiagram(){
 				}
 				//计算出柱形个数最多的柱形个数
 				column_count = max(column_count, data[u].x.show_count);
+			//	console.log(column_count);
 			}
 			//
-			rect_width = Math.floor(width/column_count);
+			//rect_width = Math.floor(width/column_count);
 			
+			rect_width = width/(max_value-min_value+1);
+
 			context.beginPath();
 			var table_count_height = 0;
 			//求出总的高度
@@ -325,9 +333,11 @@ function FColumnDiagram(){
 				{
 					if(data[i].x.data[j] >= min_value && data[i].x.data[j] <= max_value)
 					{
+						//console.log(i+" "+data[i].x.data[j]);
 						var x = rect_width/2+rect_width*(data[i].x.data[j]-min_value);
 						var h = grid_height * data[i].y.data[j];				//
 						var y = start_y + grid_height * data[i].y.data[j];
+						//console.log("x:"+x+" y:"+y+" h:"+h);
 						//console.log(scale);
 						//draw fill
 						context.fillStyle = "rgb(125, 200, 200)";
@@ -366,7 +376,7 @@ function FColumnDiagram(){
 			context.strokeStyle = "rgb(0, 0, 0)";
 			context.stroke();
 
-			console.log(min_value+" "+max_value);
+			//console.log(min_value+" "+max_value);
 			//显示刻度
 			for(var i = min_value, index = 1; i <= max_value; i ++, index ++)
 			{

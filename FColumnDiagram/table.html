@@ -19,23 +19,35 @@
 					x:"量程",
 					y:"量程次数"
 				},
-				scale:4,
+				scale:1,
 				min:1,
-				max:300,
-				select_min:1,
-				select_max:11,
+				max:900,
+				select_min:390,
+				select_max:410,
 				//数据，包括table
 				data:[]
 			});
+
+			/*s.add({
+				title:"1",
+				x:{data:[390.345, 510.527, 537.361,456.046,550.531]},
+				y:{data:[2, 1, 1, 1, 1]}
+			});
+			s.add({
+				title:"2",
+				x:{data:[33.0, 342.0, 510.527]},
+				y:{data:[1, 1, 1]}
+			});*/
+			
 			s.add({
 				title:"标题1",
-				x:{data:[1, 2, 3, 4, 5, 79]},
-				y:{data:[3, 4, 5, 6, 7, 10]}
+				x:{data:[390.345, 510.527, 537.361,456.046,550.531]},
+				y:{data:[2, 1, 1, 1, 1]}
 			});
 			$("#column_table").getColumnDiagram().add({
 				title:"标题2",
-				x:{data:[1, 2, 3, 4.5, 6]},
-				y:{data:[2, 11, 2, 4, 1]}
+				x:{data:[33.0, 342.0, 510.527]},
+				y:{data:[1, 1, 1]}
 			});
 		</script>
 	</body>

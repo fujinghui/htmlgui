@@ -1,0 +1,126 @@
+<!DOCTYPE>
+<html>
+<head>
+
+		<script src="jquery.min.js"></script>
+<script>
+	function form_save(obj){
+		var form = $("#Form").find("input");
+		var names = [];
+		for(var i = 0; i < form.length; i ++)
+		{
+			var s = {name:$(form[i]).attr("name"), value:$(form[i]).val()};
+			if($(form[i]).attr("type") == "checkbox")
+			{
+				console.log($(form[i])[0]);
+				s.value = $(form[i]).is(":checked");
+			}
+			names.push(s);
+		}
+		form = $("#Form").find("select");
+		//console.log(form.length);
+		for(var i = 0; i < form.length; i ++)
+		{
+			var s = {name:$(form[i]).attr("name"), value:$(form[i]).val()};
+			console.log(s);
+			names.push(s);
+		}
+		var o = {name:names};
+		//console.log(o);
+		localStorage.setItem("form1", JSON.stringify(o));
+	}
+	function get_form_value(name, data){
+		if(data == null || typeof(data) == "undefined")
+			return null;
+		data = data.name;
+		for(var i = 0; i < data.length; i ++)
+		{
+			if(data[i].name == name)
+				return data[i].value;
+		}
+		return null;
+	}
+	function load_form(){
+		var form_data = JSON.parse(localStorage.getItem("form1"));
+		console.log(form_data);
+/* 		for(var i= 0; i < form_data.length; i ++)
+		{
+			console.log(form_data[i]);
+		}
+		return; */
+		
+		var form = $("#Form").find("input");
+		for(var i = 0; i < form.length; i ++)
+		{
+			var value = get_form_value($(form[i]).attr("name"), form_data);
+			if(value == null)
+				;
+			else
+			{
+				if($(form[i]).attr("type") == "checkbox" && value == true)
+				{
+					$(form[i]).attr("checked", true)
+				}
+				else
+					$(form[i]).val(value);
+			}
+		}
+		//select
+		var form = $("#Form").find("select");
+		for(var i = 0; i < form.length; i ++)
+		{
+			var value = get_form_value($(form[i]).attr("name"), form_data);
+			//console.log(value);
+			if(value == null)
+				;
+			else
+			{
+				//console.log(value);
+				var s = $(form[i]).find("option");
+				//console.log(s);
+				for(var j = 0; j < s.length;  j++)
+				{
+					//console.log(s[j].value);
+					if(s[j].value == value)
+					{
+					//	console.log("---");
+						console.log($(s[j]).attr("selected"));
+						$(s[j]).attr("selected", true);
+					}
+					else
+					{
+						$(s[j]).attr("selected", false);
+					}
+				}
+			}
+		}
+	}
+	$(document).ready(function(){
+		load_form();
+	});
+
+</script>
+
+</head>
+<html>
+	
+
+
+
+
+	<form id="Form">
+		<select name="test">
+			<option value="1">1</option>
+			<option value="2">2</option>
+		</select>
+		<input type="checkbox" name="dfadf">
+		<input type="text" name="1212">
+		<a onclick="form_save()">submit</a>
+	</form>
+
+
+
+
+
+
+</html>
